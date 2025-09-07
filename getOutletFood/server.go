@@ -17,9 +17,13 @@ func StartServer() {
 	r.HandleFunc("/api/getOutletFood", getOutletFoodHandler).Methods("POST")
 	r.HandleFunc("/api/updateOutletFood", updateOutletFoodHandler).Methods("POST")
 
-	// serve admin UI (index.html) and assets from ./web
+	// serve admin UI
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./web/index.html")
+	})
+	// static assets
 	fs := http.FileServer(http.Dir("./web"))
-	r.PathPrefix("/").Handler(fs)
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
 	// Cloud Run provides PORT via env var
 	port := os.Getenv("PORT")
