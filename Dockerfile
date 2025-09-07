@@ -22,5 +22,6 @@ FROM gcr.io/distroless/base-debian12
 
 WORKDIR /app
 COPY --from=builder /app/myservice .
+COPY --from=builder /app/web ./web
 
 CMD ["./myservice"]
